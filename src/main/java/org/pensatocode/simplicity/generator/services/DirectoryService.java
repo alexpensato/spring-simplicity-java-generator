@@ -76,6 +76,18 @@ public enum DirectoryService {
         return getDirectory(GeneratorUtil.CONTROLLERS_KEY, paths.getControllersPath());
     }
 
+    public File getResourcesDir() {
+        return getDirectory(GeneratorUtil.RESOURCES_KEY, paths.getResourcesPath());
+    }
+
+    public File getTestResourcesDir() {
+        return getDirectory(GeneratorUtil.TEST_RESOURCES_KEY, paths.getTestResourcesPath());
+    }
+
+    public File getTestRepositoriesDir() {
+        return getDirectory(GeneratorUtil.TEST_REPOSITORIES_KEY, paths.getTestRepositoriesPath());
+    }
+
     private File getDirectory(String key, String directoryPath) {
         if (log.isDebugEnabled()) {
             log.debug(String.format("%s path = %s", key, directoryPath));

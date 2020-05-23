@@ -9,6 +9,9 @@ public interface Paths {
     String getModelPath();
     String getRepositoriesPath();
     String getRepoImplementationsPath();
+    String getResourcesPath();
+    String getTestResourcesPath();
+    String getTestRepositoriesPath();
 
     //Collections
     Map<String, String> getDestinyPaths();

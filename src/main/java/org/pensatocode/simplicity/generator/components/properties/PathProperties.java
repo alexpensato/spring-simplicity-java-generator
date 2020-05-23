@@ -40,6 +40,9 @@ public enum PathProperties implements Paths {
     private String repositoriesPath;
     private String repoImplementationsPath;
     private String mappersPath;
+    private String resourcesPath;
+    private String testResourcesPath;
+    private String testRepositoriesPath;
 
     // Paths map
     private Map<String, String> destinyPaths;
@@ -100,6 +103,16 @@ public enum PathProperties implements Paths {
         destinyPaths.put(GeneratorUtil.REPOSITORY_IMPL_KEY, repoImplementationsPath);
         mappersPath = baseJavaPath + fixPath(packages.getMappersPackage());
         destinyPaths.put(GeneratorUtil.MAPPERS_KEY, mappersPath);
+        // resources
+        resourcesPath = fixPath(this.getSimplicityProjectPath())
+                + fixPath(this.getSimplicityProjectJavaResources());
+        // test-resources
+        testResourcesPath = fixPath(this.getSimplicityProjectPath())
+                + fixPath(this.getSimplicityProjectTestResources());
+        // test-classes-path
+        final String baseTestPath = fixPath(this.getSimplicityProjectPath())
+                + fixPath(this.getSimplicityProjectTestResources());
+        testRepositoriesPath = baseTestPath + fixPath(packages.getRepositoriesPackage());
     }
 
     private String fixPath(String str) {
@@ -144,6 +157,18 @@ public enum PathProperties implements Paths {
 
     public String getMappersPath() {
         return mappersPath;
+    }
+
+    public String getResourcesPath() {
+        return resourcesPath;
+    }
+
+    public String getTestResourcesPath() {
+        return testResourcesPath;
+    }
+
+    public String getTestRepositoriesPath() {
+        return testRepositoriesPath;
     }
 
     /*

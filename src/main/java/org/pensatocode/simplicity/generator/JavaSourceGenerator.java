@@ -54,6 +54,7 @@ public class JavaSourceGenerator {
             javaSourceWriters.add(new MapperWriter(velocityEngine, dirService, javaService, packages));
             javaSourceWriters.add(new RepositoryImplWriter(velocityEngine, dirService, packages));
             javaSourceWriters.add(new ControllerWriter(velocityEngine, dirService, packages));
+            javaSourceWriters.add(new SchemaWriter(dirService, javaService, packages));
         }
         return javaSourceWriters;
     }
