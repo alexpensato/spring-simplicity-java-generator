@@ -1,0 +1,8 @@
+package $!packageName;
+
+import $!qualifiedEntityName;
+
+import org.pensatocode.simplicity.jdbc.JdbcRepository;
+
+public interface $!repositoryName extends JdbcRepository<$!entityName, $!idType> {
+}

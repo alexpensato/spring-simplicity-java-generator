@@ -1,0 +1,17 @@
+package $!packageName;
+
+import $!qualifiedEntityName;
+import $!qualifiedRepositoryName;
+
+import org.pensatocode.simplicity.web.AbstractController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/$!endpointMapping")
+public class $!controllerName extends AbstractController<$!entityName, $!idType> {
+    public $!controllerName(@Autowired $!repositoryName $!beanName) {
+        super($!beanName);
+    }
+}

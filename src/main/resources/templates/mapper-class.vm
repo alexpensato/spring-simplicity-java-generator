@@ -1,0 +1,46 @@
+package $!packageName;
+
+import $!qualifiedEntityName;
+
+import org.pensatocode.simplicity.jdbc.mapper.TransactionalRowMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class $!mapperName extends TransactionalRowMapper<$!entityName> {
+
+    @Override
+    public $!entityName mapRow(ResultSet rs, int rowNum) {
+        try {
+            return new $!entityName(
+#foreach( $variable in $variables )
+                    rs.${variable.typeGetter}("${variable.name}")${variable.typeGetterSuffix}#if($velocityCount < $variables.size()),#end$!newLine
+#end
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Map<String, Object> mapColumns($!entityName entity) {
+        Map<String, Object> mapping = new LinkedHashMap<>();
+#foreach( $variable in $variables )
+        mapping.put("${variable.name}", entity.${variable.getterMethod}());$!newLine
+#end
+        return mapping;
+    }
+
+    @Override
+    public Map<String, Integer> mapTypes() {
+        final Map<String, Integer> mapping = new LinkedHashMap<>();
+#foreach( $variable in $variables )
+        mapping.put("${variable.name}", Types.${variable.databaseType});$!newLine
+#end
+        return mapping;
+    }
+}

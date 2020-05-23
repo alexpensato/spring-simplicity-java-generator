@@ -1,14 +1,17 @@
+.gradle
+.scannerwork
+build/
+target/
+
+!**/src/main/**
+!**/src/test/**
+
 # Compiled class file
 *.class
 
 # Log file
 *.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+*.log.gz
 
 # Package Files #
 *.jar
@@ -16,8 +19,20 @@
 *.nar
 *.ear
 *.zip
+*.gz
 *.tar.gz
 *.rar
 
+# Necessary JAR files
+!libs/spring-simplicity-java.jar
+!gradle/wrapper/gradle-wrapper.jar
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
