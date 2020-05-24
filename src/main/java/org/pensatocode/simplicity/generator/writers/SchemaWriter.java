@@ -94,7 +94,7 @@ public class SchemaWriter implements JavaSourceWriter {
                 .append(tableName)
                 .append("_id_seq') PRIMARY KEY,\n");
         int counter = 0;
-        int sizeLimit = variables.size() - 1;
+        int sizeLimit = variables.size() - 2; // id is removed
         for(MapperVariable variable: variables) {
             if (variable.getName().equals(id.getName())) {
                 continue;
