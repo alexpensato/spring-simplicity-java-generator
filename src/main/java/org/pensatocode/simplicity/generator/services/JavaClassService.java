@@ -6,20 +6,18 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
-import com.github.javaparser.ast.expr.SimpleName;
-import com.github.javaparser.ast.type.Type;
 import lombok.extern.log4j.Log4j2;
 import org.pensatocode.simplicity.generator.exceptions.GeneratorConfigurationException;
 import org.pensatocode.simplicity.generator.model.MapperVariable;
+import org.pensatocode.simplicity.generator.model.SchemaType;
+import org.pensatocode.simplicity.generator.model.SqlSchemaType;
+import org.pensatocode.simplicity.generator.model.UserDefinedSchemaType;
 import org.pensatocode.simplicity.generator.util.StringUtil;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 
 @Log4j2
@@ -110,69 +108,14 @@ public enum JavaClassService {
     public List<MapperVariable> listMapperVariables(ClassOrInterfaceDeclaration entity) {
         List<MapperVariable> mapperVariables = new ArrayList<>();
         for(VariableDeclarator variable: listVariables(entity)) {
-            MapperVariable newVariable = new MapperVariable(
-                    variable.getNameAsString(),
-                    createGetterMethod(variable.getName()),
-                    createTypeGetter(variable.getType()),
-                    createTypeGetterSuffix(variable.getType()),
-                    convertToDatabaseType(variable.getType())
-            );
-            mapperVariables.add(newVariable);
+            SchemaType schemaType = SqlSchemaType.convertFromJavaParserType(variable.getType());
+            if (schemaType == null) {
+                schemaType = new UserDefinedSchemaType(variable.getTypeAsString());
+            }
+            String name = variable.getNameAsString();
+            mapperVariables.add(new MapperVariable(name, StringUtil.capitalize(name), schemaType));
         }
         return mapperVariables;
     }
 
-    private String createGetterMethod(SimpleName name) {
-        return "get"+ StringUtil.capitalize(name.toString());
-    }
-
-    private String createTypeGetter(Type type) {
-        String strType = type.asString();
-        if (LocalTime.class.getSimpleName().equals(strType) ||
-                LocalDateTime.class.getSimpleName().equals(strType)) {
-            return "getTimestamp";
-        }
-        if (Date.class.getSimpleName().equals(strType) ||
-                LocalDate.class.getSimpleName().equals(strType)) {
-            return "getDate";
-        }
-        return "get"+StringUtil.capitalize(strType);
-    }
-
-    private String createTypeGetterSuffix(Type type) {
-        String strType = type.asString();
-        if (LocalTime.class.getSimpleName().equals(strType) ||
-                LocalDateTime.class.getSimpleName().equals(strType)) {
-            return ".toLocalDateTime()";
-        }
-        if (Date.class.getSimpleName().equals(strType) ||
-                LocalDate.class.getSimpleName().equals(strType)) {
-            return ".toLocalDate()";
-        }
-        return "";
-    }
-
-    private String convertToDatabaseType(Type type) {
-        String strType = type.asString();
-        if (String.class.getSimpleName().equals(strType)) {
-            return "VARCHAR";
-        }
-        if (Long.class.getSimpleName().equals(strType) ||
-                Integer.class.getSimpleName().equals(strType) ||
-                Short.class.getSimpleName().equals(strType)) {
-            return "INTEGER";
-        }
-        if (LocalTime.class.getSimpleName().equals(strType) ||
-                LocalDateTime.class.getSimpleName().equals(strType)) {
-            return "TIMESTAMP";
-        }
-        if (Date.class.getSimpleName().equals(strType) ||
-                LocalDate.class.getSimpleName().equals(strType)) {
-            return "DATE";
-        }
-        if (Boolean.class.getSimpleName().equals(strType)) {
-            return "BOOLEAN";
-        }
-        return strType;
-    }
 }

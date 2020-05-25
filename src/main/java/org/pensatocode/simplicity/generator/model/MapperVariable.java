@@ -11,8 +11,6 @@ import lombok.extern.log4j.Log4j2;
 @AllArgsConstructor
 public class MapperVariable {
     private String name;
-    private String getterMethod;
-    private String typeGetter;
-    private String typeGetterSuffix;
-    private String databaseType;
+    private String capitalizedName;
+    private SchemaType type;
 }

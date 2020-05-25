@@ -89,7 +89,7 @@ public class SchemaWriter implements JavaSourceWriter {
         sb.append("  ")
                 .append(id.getName())
                 .append(" ")
-                .append(id.getDatabaseType().toLowerCase())
+                .append(id.getType().getSqlType().toLowerCase())
                 .append(" DEFAULT nextval('")
                 .append(tableName)
                 .append("_id_seq') PRIMARY KEY,\n");
@@ -102,7 +102,7 @@ public class SchemaWriter implements JavaSourceWriter {
             sb.append("  ")
                     .append(variable.getName())
                     .append(" ")
-                    .append(variable.getDatabaseType().toLowerCase())
+                    .append(variable.getType().getSqlType().toLowerCase())
                     .append(" NOT NULL");
             if(counter < sizeLimit) {
                 sb.append(",");

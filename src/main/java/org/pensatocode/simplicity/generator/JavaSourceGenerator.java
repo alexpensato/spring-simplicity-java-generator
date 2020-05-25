@@ -35,11 +35,13 @@ public class JavaSourceGenerator {
             VariableDeclarator id = javaService.extractId(entity);
             if (id == null) {
                 // stop processing if id was not found
+                log.warn(String.format("Entity %s has no field annotated with @Id", entity.getNameAsString()));
                 return false;
             }
             for (JavaSourceWriter writer: getJavaSourceWriters()) {
                 if(!writer.generateSourceCode(entity, id)) {
                     // stop processing if something went wrong
+                    log.warn(String.format("Entity %s could not be generated", entity.getNameAsString()));
                     return false;
                 }
             }
