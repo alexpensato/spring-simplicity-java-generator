@@ -33,12 +33,18 @@ public enum SqlSchemaType implements SchemaType {
     OBJECT("Object","OTHER")
     ;
 
+    public static class InnerMap
+    {
+        private static final Map<String, SqlSchemaType> INSTANCE = new HashMap<>();
+    }
+
     SqlSchemaType(String javaType, String sqlType, String resultSetTypeGetter, String resultSetPrefix, String resultSetSuffix) {
         this.javaType = javaType;
         this.sqlType = sqlType;
         this.resultSetTypeGetter = resultSetTypeGetter;
         this.resultSetSuffix = resultSetSuffix;
         this.resultSetPrefix = resultSetPrefix;
+        InnerMap.INSTANCE.put(javaType, this);
     }
 
     SqlSchemaType(String javaType, String sqlType, String resultSetTypeGetter) {
@@ -55,23 +61,8 @@ public enum SqlSchemaType implements SchemaType {
     private final String resultSetPrefix;
     private final String resultSetSuffix;
 
-    private static Map<String, SqlSchemaType> map = new HashMap<>();
-
     public static SqlSchemaType convertFromJavaParserType(Type type) {
-        if (map.isEmpty()) {
-            initialiseMap();
-        }
-        return map.get(StringUtil.capitalize(type.asString()));
-    }
-
-    private static void initialiseMap() {
-        synchronized (SqlSchemaType.class) {
-            if (map.isEmpty()) {
-                for(SqlSchemaType sqlSchemaType : SqlSchemaType.values()) {
-                    map.put(sqlSchemaType.javaType, sqlSchemaType);
-                }
-            }
-        }
+        return InnerMap.INSTANCE.get(StringUtil.capitalize(type.asString()));
     }
 
     @Override
