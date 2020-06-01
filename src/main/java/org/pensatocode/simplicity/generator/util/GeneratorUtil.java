@@ -15,7 +15,8 @@ public class GeneratorUtil {
     public static final String REPOSITORY_SUFFIX = "Repository";
     public static final String REPOSITORY_IMPL_SUFFIX = "RepositoryImpl";
     public static final String MAPPER_SUFFIX = "Mapper";
-    public static final String CONTROLLER_SUFFIX = "Controller";
+    public static final String REST_CONTROLLER_SUFFIX = "RestController";
+    public static final String MVC_CONTROLLER_SUFFIX = "MvcController";
 
     // Extension
     public static final String JAVA_EXTENSION = ".java";

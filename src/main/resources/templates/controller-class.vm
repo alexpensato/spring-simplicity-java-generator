@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/$!endpointMapping")
+@RequestMapping("/$!apiContext/$!{endpointMapping}s")
 public class $!controllerName extends AbstractController<$!entityName, $!idType> {
     public $!controllerName(@Autowired $!repositoryName $!beanName) {
         super($!beanName);

@@ -12,5 +12,6 @@ import lombok.extern.log4j.Log4j2;
 public class MapperVariable {
     private String name;
     private String capitalizedName;
+    private String schemaName;
     private SchemaType type;
 }

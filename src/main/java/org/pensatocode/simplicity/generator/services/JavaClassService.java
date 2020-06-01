@@ -113,7 +113,9 @@ public enum JavaClassService {
                 schemaType = new UserDefinedSchemaType(variable.getTypeAsString());
             }
             String name = variable.getNameAsString();
-            mapperVariables.add(new MapperVariable(name, StringUtil.capitalize(name), schemaType));
+            String capitalizedName = StringUtil.capitalize(name);
+            String schemaName = StringUtil.convertToSnakeCase(name);
+            mapperVariables.add(new MapperVariable(name, capitalizedName, schemaName, schemaType));
         }
         return mapperVariables;
     }

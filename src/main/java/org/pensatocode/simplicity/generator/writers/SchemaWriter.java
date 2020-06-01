@@ -3,7 +3,9 @@ package org.pensatocode.simplicity.generator.writers;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import lombok.extern.log4j.Log4j2;
+import org.pensatocode.simplicity.generator.components.Config;
 import org.pensatocode.simplicity.generator.components.Packages;
+import org.pensatocode.simplicity.generator.components.properties.ConfigProperties;
 import org.pensatocode.simplicity.generator.model.MapperVariable;
 import org.pensatocode.simplicity.generator.services.DirectoryService;
 import org.pensatocode.simplicity.generator.services.JavaClassService;
@@ -18,12 +20,12 @@ public class SchemaWriter implements JavaSourceWriter {
 
     private final DirectoryService dirService;
     private final JavaClassService javaService;
-    private final Packages packages;
+    private final Config config;
 
-    public SchemaWriter(DirectoryService dirService, JavaClassService javaService, Packages packages) {
+    public SchemaWriter(DirectoryService dirService, JavaClassService javaService) {
         this.dirService = dirService;
         this.javaService = javaService;
-        this.packages = packages;
+        this.config = ConfigProperties.get();
     }
 
     public boolean generateSourceCode(ClassOrInterfaceDeclaration entity, VariableDeclarator id) {
@@ -110,7 +112,18 @@ public class SchemaWriter implements JavaSourceWriter {
             counter++;
             sb.append("\n");
         }
-        sb.append(");\n");
+        sb.append(");\n\n")
+                .append("GRANT USAGE, SELECT ON SEQUENCE ")
+                .append(tableName)
+                .append("_id_seq TO ")
+                .append(config.getDatabaseUsername())
+                .append(";\n")
+                .append("GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE ")
+                .append(tableName)
+                .append(" TO ")
+                .append(config.getDatabaseUsername())
+                .append(";\n");
+
         // return schema DDL
         return sb.toString();
     }

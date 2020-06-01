@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 
 public final class StringUtil {
 
+    public final static String ALL = "*";
+
     private StringUtil() {
         // Util
     }

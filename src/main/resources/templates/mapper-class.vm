@@ -17,7 +17,7 @@ public class $!mapperName extends TransactionalRowMapper<$!entityName> {
         try {
             return new $!entityName(
 #foreach( $variable in $variables )
-                    ${variable.type.ResultSetPrefix}rs.${variable.type.resultSetTypeGetter}("${variable.name}")${variable.type.ResultSetSuffix}#if($velocityCount < $variables.size()),#end$!newLine
+                    ${variable.type.ResultSetPrefix}rs.${variable.type.resultSetTypeGetter}("${variable.schemaName}")${variable.type.ResultSetSuffix}#if($velocityCount < $variables.size()),#end$!newLine
 #end
             );
         } catch (SQLException e) {
@@ -30,7 +30,7 @@ public class $!mapperName extends TransactionalRowMapper<$!entityName> {
     public Map<String, Object> mapColumns($!entityName entity) {
         Map<String, Object> mapping = new LinkedHashMap<>();
 #foreach( $variable in $variables )
-        mapping.put("${variable.name}", entity.get${variable.capitalizedName}());$!newLine
+        mapping.put("${variable.schemaName}", entity.get${variable.capitalizedName}());$!newLine
 #end
         return mapping;
     }
@@ -39,7 +39,7 @@ public class $!mapperName extends TransactionalRowMapper<$!entityName> {
     public Map<String, Integer> mapTypes() {
         final Map<String, Integer> mapping = new LinkedHashMap<>();
 #foreach( $variable in $variables )
-        mapping.put("${variable.name}", Types.${variable.type.sqlType});$!newLine
+        mapping.put("${variable.schemaName}", Types.${variable.type.sqlType});$!newLine
 #end
         return mapping;
     }

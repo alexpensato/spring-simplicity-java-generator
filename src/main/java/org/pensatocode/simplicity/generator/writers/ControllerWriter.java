@@ -6,7 +6,9 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.pensatocode.simplicity.generator.components.Config;
 import org.pensatocode.simplicity.generator.components.Packages;
+import org.pensatocode.simplicity.generator.components.properties.ConfigProperties;
 import org.pensatocode.simplicity.generator.services.DirectoryService;
 import org.pensatocode.simplicity.generator.util.GeneratorUtil;
 import org.pensatocode.simplicity.generator.util.StringUtil;
@@ -20,22 +22,26 @@ public class ControllerWriter implements JavaSourceWriter {
     private final VelocityEngine velocityEngine;
     private final DirectoryService dirService;
     private final Packages packages;
+    private final Config config;
 
     public ControllerWriter(VelocityEngine velocityEngine, DirectoryService dirService, Packages packages) {
         this.velocityEngine = velocityEngine;
         this.dirService = dirService;
         this.packages = packages;
+        this.config = ConfigProperties.get();
     }
 
     public boolean generateSourceCode(ClassOrInterfaceDeclaration entity, VariableDeclarator id) {
         // repository implementation
-        String controllerName = entity.getNameAsString() + GeneratorUtil.CONTROLLER_SUFFIX;
+        String controllerName = entity.getNameAsString() + GeneratorUtil.REST_CONTROLLER_SUFFIX;
         String fileAbsolutePath = dirService.getControllersDir().getAbsolutePath()
                 + File.separator
                 + controllerName
                 + GeneratorUtil.JAVA_EXTENSION;
         File sourceFile = new File(fileAbsolutePath);
-        if (sourceFile.exists()) {
+        boolean regenerate = config.getRegenerateControllers().contains(entity.getNameAsString()) ||
+                config.getRegenerateControllers().contains(StringUtil.ALL);
+        if (sourceFile.exists() && !regenerate) {
             // do nothing
             return true;
         }
@@ -58,6 +64,7 @@ public class ControllerWriter implements JavaSourceWriter {
         velocityContext.put("entityName", entity.getNameAsString());
         velocityContext.put("idName", id.getName());
         velocityContext.put("idType", id.getType());
+        velocityContext.put("apiContext", config.getApiContext());
         Template template = velocityEngine.getTemplate("controller-class.vm");
         // write the class
         return VelocityUtil.writeFile(fileAbsolutePath, template, velocityContext);

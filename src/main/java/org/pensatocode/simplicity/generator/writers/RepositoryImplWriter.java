@@ -6,7 +6,9 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.pensatocode.simplicity.generator.components.Config;
 import org.pensatocode.simplicity.generator.components.Packages;
+import org.pensatocode.simplicity.generator.components.properties.ConfigProperties;
 import org.pensatocode.simplicity.generator.services.DirectoryService;
 import org.pensatocode.simplicity.generator.util.GeneratorUtil;
 import org.pensatocode.simplicity.generator.util.StringUtil;
@@ -20,11 +22,13 @@ public class RepositoryImplWriter implements JavaSourceWriter {
     private final VelocityEngine velocityEngine;
     private final DirectoryService dirService;
     private final Packages packages;
+    private final Config config;
 
     public RepositoryImplWriter(VelocityEngine velocityEngine, DirectoryService dirService, Packages packages) {
         this.velocityEngine = velocityEngine;
         this.dirService = dirService;
         this.packages = packages;
+        this.config = ConfigProperties.get();
     }
 
     public boolean generateSourceCode(ClassOrInterfaceDeclaration entity, VariableDeclarator id) {
@@ -35,7 +39,9 @@ public class RepositoryImplWriter implements JavaSourceWriter {
                 + repositoryImplName
                 + GeneratorUtil.JAVA_EXTENSION;
         File sourceFile = new File(fileAbsolutePath);
-        if (sourceFile.exists()) {
+        boolean regenerate = config.getRegenerateRepositories().contains(entity.getNameAsString()) ||
+                config.getRegenerateRepositories().contains(StringUtil.ALL);
+        if (sourceFile.exists() && !regenerate) {
             // do nothing
             return true;
         }
