@@ -1,4 +1,4 @@
-package org.pensatocode.simplicity.generator.writers;
+package org.pensatocode.simplicity.generator.writers.generator;
 
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
@@ -13,18 +13,19 @@ import org.pensatocode.simplicity.generator.services.DirectoryService;
 import org.pensatocode.simplicity.generator.util.GeneratorUtil;
 import org.pensatocode.simplicity.generator.util.StringUtil;
 import org.pensatocode.simplicity.generator.util.VelocityUtil;
+import org.pensatocode.simplicity.generator.writers.JavaSourceWriter;
 
 import java.io.File;
 
 @Log4j2
-public class RepositoryImplWriter implements JavaSourceWriter {
+public class RestControllerWriter implements JavaSourceWriter {
 
     private final VelocityEngine velocityEngine;
     private final DirectoryService dirService;
     private final Packages packages;
     private final Config config;
 
-    public RepositoryImplWriter(VelocityEngine velocityEngine, DirectoryService dirService, Packages packages) {
+    public RestControllerWriter(VelocityEngine velocityEngine, DirectoryService dirService, Packages packages) {
         this.velocityEngine = velocityEngine;
         this.dirService = dirService;
         this.packages = packages;
@@ -32,46 +33,40 @@ public class RepositoryImplWriter implements JavaSourceWriter {
     }
 
     public boolean generateSourceCode(ClassOrInterfaceDeclaration entity, VariableDeclarator id) {
-        // concrete repository
-        String repositoryImplName = entity.getNameAsString() + GeneratorUtil.REPOSITORY_IMPL_SUFFIX;
-        String fileAbsolutePath = dirService.getRepositoryImplementationDir().getAbsolutePath()
+        // repository implementation
+        String controllerName = entity.getNameAsString() + GeneratorUtil.REST_CONTROLLER_SUFFIX;
+        String fileAbsolutePath = dirService.getRestControllersDir().getAbsolutePath()
                 + File.separator
-                + repositoryImplName
+                + controllerName
                 + GeneratorUtil.JAVA_EXTENSION;
         File sourceFile = new File(fileAbsolutePath);
-        boolean regenerate = config.getRegenerateRepositories().contains(entity.getNameAsString()) ||
-                config.getRegenerateRepositories().contains(StringUtil.ALL);
+        boolean regenerate = config.getRegenerateControllers().contains(entity.getNameAsString()) ||
+                config.getRegenerateControllers().contains(StringUtil.ALL);
         if (sourceFile.exists() && !regenerate) {
             // do nothing
             return true;
         }
-        // mapper
-        String mapperName = entity.getNameAsString() + GeneratorUtil.MAPPER_SUFFIX;
-        String mapperQualifiedName = packages.getMappersPackage() + GeneratorUtil.DOT + mapperName;
         // repository interface
         String repositoryName = entity.getNameAsString() + GeneratorUtil.REPOSITORY_SUFFIX;
-        String repositoryQualifiedName = packages.getRepositoriesPackage() + GeneratorUtil.DOT + repositoryName;
+        String qualifiedRepositoryName = packages.getRepositoriesPackage() + GeneratorUtil.DOT + repositoryName;
         // repository-based name
+        String endpointMapping = StringUtil.decapitalize(entity.getNameAsString());
+        // entity-based name
         String beanName = StringUtil.decapitalize(repositoryName);
-        // entity-based names
-        String tableName = StringUtil.convertToSnakeCase(entity.getNameAsString());
-        String entityClass = entity.getNameAsString() + GeneratorUtil.CLASS_EXTENSION;
         // create the template
         VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("packageName", packages.getRepoImplementationsPackage());
+        velocityContext.put("packageName", packages.getRestControllersPackage());
         velocityContext.put("qualifiedEntityName", entity.getFullyQualifiedName().orElse(""));
-        velocityContext.put("qualifiedMapperName", mapperQualifiedName);
-        velocityContext.put("qualifiedInterfaceName", repositoryQualifiedName);
-        velocityContext.put("repositoryBeanName", beanName);
-        velocityContext.put("concreteRepositoryName", repositoryImplName);
-        velocityContext.put("interfaceName", repositoryName);
-        velocityContext.put("mapperName", mapperName);
+        velocityContext.put("qualifiedRepositoryName", qualifiedRepositoryName);
+        velocityContext.put("endpointMapping", endpointMapping);
+        velocityContext.put("controllerName", controllerName);
+        velocityContext.put("repositoryName", repositoryName);
+        velocityContext.put("beanName", beanName);
         velocityContext.put("entityName", entity.getNameAsString());
-        velocityContext.put("tableName", tableName);
-        velocityContext.put("entityClass", entityClass);
         velocityContext.put("idName", id.getName());
         velocityContext.put("idType", id.getType());
-        Template template = velocityEngine.getTemplate("repository-class.vm");
+        velocityContext.put("apiContext", config.getApiContext());
+        Template template = velocityEngine.getTemplate("controller-class.vm");
         // write the class
         return VelocityUtil.writeFile(fileAbsolutePath, template, velocityContext);
     }

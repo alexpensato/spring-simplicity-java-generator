@@ -4,12 +4,16 @@ import java.util.Map;
 
 public interface Paths {
     // Paths
-    String getControllersPath();
+    String getProjectPath();
+    String getRootPackagePath();
+    String getRestControllersPath();
+    String getMvcControllersPath();
     String getMappersPath();
     String getModelPath();
     String getRepositoriesPath();
     String getRepoImplementationsPath();
     String getResourcesPath();
+    String getTestJavaSourcePath();
     String getTestResourcesPath();
     String getTestRepositoriesPath();
 

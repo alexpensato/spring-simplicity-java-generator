@@ -57,7 +57,18 @@ tasks.register("simplicityGenerator", JavaExec::class) {
     }
     group = "simplicity"
     description = "Generate all classes for Simplicity entities"
-    main = "org.pensatocode.simplicity.generator.Application"
+    main = "org.pensatocode.simplicity.generator.AppGenerator"
+}
+
+tasks.register("simplicityStarter", JavaExec::class) {
+    dependsOn(JavaPlugin.COMPILE_JAVA_TASK_NAME)
+    doFirst {
+        classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", "$buildDir/libs")
+        classpath += sourceSets["main"].runtimeClasspath
+    }
+    group = "simplicity"
+    description = "Project starter for Simplicity entities"
+    main = "org.pensatocode.simplicity.generator.AppProjectStarter"
 }
 
 

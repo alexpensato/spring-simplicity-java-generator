@@ -4,7 +4,8 @@ import java.util.Map;
 
 public interface Packages {
     // Packages
-    String getControllersPackage();
+    String getRestControllersPackage();
+    String getMvcControllersPackage();
     String getMappersPackage();
     String getModelsPackage();
     String getPackageGroup();

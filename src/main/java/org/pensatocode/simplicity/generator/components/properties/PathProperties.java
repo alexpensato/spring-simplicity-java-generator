@@ -35,12 +35,16 @@ public enum PathProperties implements Paths {
     private final char WRONG_SEPARATOR;
 
     // Assembled properties
+    private String projectPath;
+    private String rootPackagePath;
     private String modelPath;
-    private String controllersPath;
+    private String restControllersPath;
+    private String mvcControllersPath;
     private String repositoriesPath;
     private String repoImplementationsPath;
     private String mappersPath;
     private String resourcesPath;
+    private String testJavaSourcePath;
     private String testResourcesPath;
     private String testRepositoriesPath;
 
@@ -51,7 +55,7 @@ public enum PathProperties implements Paths {
     PathProperties() {
         properties = new Properties();
         try {
-            properties.load(getClass().getClassLoader().getResourceAsStream("simplicity.properties"));
+            properties.load(getClass().getClassLoader().getResourceAsStream("simplicity-generator.properties"));
         } catch (IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
@@ -88,15 +92,21 @@ public enum PathProperties implements Paths {
     }
 
     private void assemblePaths() {
+        // project path
+        projectPath = fixPath(this.getSimplicityProjectPath());
         // base java path
         final String baseJavaPath = fixPath(this.getSimplicityProjectPath())
                 + fixPath(this.getSimplicityProjectJavaSource());
+        // root package
+        rootPackagePath = baseJavaPath + fixPath(packages.getPackageGroup());
         // simplicity origin path
         modelPath = baseJavaPath + fixPath(packages.getModelsPackage());
         // simplicity destiny paths
         destinyPaths = new TreeMap<>();
-        controllersPath = baseJavaPath + fixPath(packages.getControllersPackage());
-        destinyPaths.put(GeneratorUtil.CONTROLLERS_KEY, controllersPath);
+        restControllersPath = baseJavaPath + fixPath(packages.getRestControllersPackage());
+        destinyPaths.put(GeneratorUtil.REST_CONTROLLERS_KEY, restControllersPath);
+        mvcControllersPath = baseJavaPath + fixPath(packages.getMvcControllersPackage());
+        destinyPaths.put(GeneratorUtil.MVC_CONTROLLERS_KEY, mvcControllersPath);
         repositoriesPath = baseJavaPath + fixPath(packages.getRepositoriesPackage());
         destinyPaths.put(GeneratorUtil.REPOSITORIES_KEY, repositoriesPath);
         repoImplementationsPath = baseJavaPath + fixPath(packages.getRepoImplementationsPackage());
@@ -111,8 +121,10 @@ public enum PathProperties implements Paths {
                 + fixPath(this.getSimplicityProjectTestResources());
         // test-classes-path
         final String baseTestPath = fixPath(this.getSimplicityProjectPath())
-                + fixPath(this.getSimplicityProjectTestResources());
+                + fixPath(this.getSimplicityProjectTestSource());
+        testJavaSourcePath = baseTestPath + fixPath(packages.getPackageGroup());
         testRepositoriesPath = baseTestPath + fixPath(packages.getRepositoriesPackage());
+        destinyPaths.put(GeneratorUtil.TEST_REPOSITORIES_KEY, testRepositoriesPath);
     }
 
     private String fixPath(String str) {
@@ -139,12 +151,24 @@ public enum PathProperties implements Paths {
         Assembled paths methods
      */
 
+    public String getProjectPath() {
+        return projectPath;
+    }
+
+    public String getRootPackagePath() {
+        return rootPackagePath;
+    }
+
     public String getModelPath() {
         return modelPath;
     }
 
-    public String getControllersPath() {
-        return controllersPath;
+    public String getRestControllersPath() {
+        return restControllersPath;
+    }
+
+    public String getMvcControllersPath() {
+        return mvcControllersPath;
     }
 
     public String getRepositoriesPath() {
@@ -171,6 +195,10 @@ public enum PathProperties implements Paths {
         return testRepositoriesPath;
     }
 
+    public String getTestJavaSourcePath() {
+        return testJavaSourcePath;
+    }
+
     /*
         Collections
      */
@@ -188,7 +216,7 @@ public enum PathProperties implements Paths {
      */
 
     private String getSimplicityProjectPath() {
-        return properties.getProperty("simplicity.generator.projectPath");
+        return properties.getProperty("simplicity.starter.projectPath");
     }
 
     private String getSimplicityProjectJavaSource() {

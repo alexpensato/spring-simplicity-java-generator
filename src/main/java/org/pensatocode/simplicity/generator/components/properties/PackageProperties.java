@@ -28,7 +28,8 @@ public enum PackageProperties implements Packages {
     // Assembled properties
     private String packageGroup;
     private String modelsPackage;
-    private String controllersPackage;
+    private String restControllersPackage;
+    private String mvcControllersPackage;
     private String mappersPackage;
     private String repositoriesPackage;
     private String repoImplementationsPackage;
@@ -40,7 +41,7 @@ public enum PackageProperties implements Packages {
     PackageProperties() {
         properties = new Properties();
         try {
-            properties.load(getClass().getClassLoader().getResourceAsStream("simplicity.properties"));
+            properties.load(getClass().getClassLoader().getResourceAsStream("simplicity-generator.properties"));
         } catch (IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
@@ -63,8 +64,11 @@ public enum PackageProperties implements Packages {
         if(StringUtil.isEmpty(getSimplicityProjectPackageModel())) {
             throw new GeneratorConfigurationException("Models package not found");
         }
-        if(StringUtil.isEmpty(getSimplicityProjectPackageControllers())) {
-            throw new GeneratorConfigurationException("Controllers package not found");
+        if(StringUtil.isEmpty(getSimplicityProjectPackageRestControllers())) {
+            throw new GeneratorConfigurationException("RestControllers package not found");
+        }
+        if(StringUtil.isEmpty(getSimplicityProjectPackageMvcControllers())) {
+            throw new GeneratorConfigurationException("MvcControllers package not found");
         }
         if(StringUtil.isEmpty(getSimplicityProjectPackageRepositories())) {
             throw new GeneratorConfigurationException("Repositories package not found");
@@ -84,8 +88,9 @@ public enum PackageProperties implements Packages {
         modelsPackage = packageGroup + DOT + this.getSimplicityProjectPackageModel();
         // simplicity packages
         destinyPackages = new TreeMap<>();
-        controllersPackage = packageGroup + DOT + this.getSimplicityProjectPackageControllers();
-        destinyPackages.put(GeneratorUtil.CONTROLLERS_KEY, controllersPackage);
+        restControllersPackage = packageGroup + DOT + this.getSimplicityProjectPackageRestControllers();
+        mvcControllersPackage = packageGroup + DOT + this.getSimplicityProjectPackageMvcControllers();
+        destinyPackages.put(GeneratorUtil.REST_CONTROLLERS_KEY, restControllersPackage);
         mappersPackage = packageGroup + DOT + this.getSimplicityProjectPackageMappers();
         destinyPackages.put(GeneratorUtil.MAPPERS_KEY, mappersPackage);
         repositoriesPackage = packageGroup + DOT + this.getSimplicityProjectPackageRepositories();
@@ -106,8 +111,12 @@ public enum PackageProperties implements Packages {
         return modelsPackage;
     }
 
-    public String getControllersPackage() {
-        return controllersPackage;
+    public String getRestControllersPackage() {
+        return restControllersPackage;
+    }
+
+    public String getMvcControllersPackage() {
+        return mvcControllersPackage;
     }
 
     public String getMappersPackage() {
@@ -139,15 +148,19 @@ public enum PackageProperties implements Packages {
      */
 
     private String getSimplicityProjectPackageGroup() {
-        return properties.getProperty("simplicity.generator.package.group");
+        return properties.getProperty("simplicity.starter.package.group");
     }
 
     private String getSimplicityProjectPackageModel() {
         return properties.getProperty("simplicity.generator.package.model");
     }
 
-    private String getSimplicityProjectPackageControllers() {
-        return properties.getProperty("simplicity.generator.package.controllers");
+    private String getSimplicityProjectPackageRestControllers() {
+        return properties.getProperty("simplicity.generator.package.restControllers");
+    }
+
+    private String getSimplicityProjectPackageMvcControllers() {
+        return properties.getProperty("simplicity.generator.package.mvcControllers");
     }
 
     private String getSimplicityProjectPackageRepositories() {

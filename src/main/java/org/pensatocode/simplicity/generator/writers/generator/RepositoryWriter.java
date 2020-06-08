@@ -1,4 +1,4 @@
-package org.pensatocode.simplicity.generator.writers;
+package org.pensatocode.simplicity.generator.writers.generator;
 
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
@@ -10,53 +10,50 @@ import org.pensatocode.simplicity.generator.components.Config;
 import org.pensatocode.simplicity.generator.components.Packages;
 import org.pensatocode.simplicity.generator.components.properties.ConfigProperties;
 import org.pensatocode.simplicity.generator.services.DirectoryService;
-import org.pensatocode.simplicity.generator.services.JavaClassService;
 import org.pensatocode.simplicity.generator.util.GeneratorUtil;
 import org.pensatocode.simplicity.generator.util.StringUtil;
 import org.pensatocode.simplicity.generator.util.VelocityUtil;
+import org.pensatocode.simplicity.generator.writers.JavaSourceWriter;
 
 import java.io.File;
 
 @Log4j2
-public class MapperWriter implements JavaSourceWriter {
+public class RepositoryWriter implements JavaSourceWriter {
 
     private final VelocityEngine velocityEngine;
     private final DirectoryService dirService;
-    private final JavaClassService javaService;
     private final Packages packages;
     private final Config config;
 
-    public MapperWriter(VelocityEngine velocityEngine, DirectoryService dirService, JavaClassService javaClassService, Packages packages) {
+    public RepositoryWriter(VelocityEngine velocityEngine, DirectoryService dirService, Packages packages) {
         this.velocityEngine = velocityEngine;
         this.dirService = dirService;
-        this.javaService = javaClassService;
         this.packages = packages;
         this.config = ConfigProperties.get();
     }
 
     public boolean generateSourceCode(ClassOrInterfaceDeclaration entity, VariableDeclarator id) {
-        // mapper
-        String mapperName = entity.getNameAsString() + GeneratorUtil.MAPPER_SUFFIX;
-        String fileAbsolutePath = dirService.getMappersDir().getAbsolutePath()
+        // repository interface
+        String repositoryName = entity.getNameAsString() + GeneratorUtil.REPOSITORY_SUFFIX;
+        String fileAbsolutePath = dirService.getRepositoriesDir().getAbsolutePath()
                 + File.separator
-                + mapperName
+                + repositoryName
                 + GeneratorUtil.JAVA_EXTENSION;
         File sourceFile = new File(fileAbsolutePath);
-        boolean regenerate = config.getRegenerateMappers().contains(entity.getNameAsString()) ||
-                config.getRegenerateMappers().contains(StringUtil.ALL);
+        boolean regenerate = config.getRegenerateRepositories().contains(entity.getNameAsString()) ||
+                config.getRegenerateRepositories().contains(StringUtil.ALL);
         if (sourceFile.exists() && !regenerate) {
             // do nothing
             return true;
         }
         // create the template
         VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("packageName", packages.getMappersPackage());
+        velocityContext.put("packageName", packages.getRepositoriesPackage());
         velocityContext.put("qualifiedEntityName", entity.getFullyQualifiedName().orElse(""));
-        velocityContext.put("mapperName", mapperName);
         velocityContext.put("entityName", entity.getNameAsString());
-        velocityContext.put("variables", javaService.listMapperVariables(entity));
-        velocityContext.put("newline", "\n");
-        Template template = velocityEngine.getTemplate("mapper-class.vm");
+        velocityContext.put("repositoryName", repositoryName);
+        velocityContext.put("idType", id.getType());
+        Template template = velocityEngine.getTemplate("repository-interface.vm");
         // write the class
         return VelocityUtil.writeFile(fileAbsolutePath, template, velocityContext);
     }

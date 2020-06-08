@@ -1,4 +1,4 @@
-package org.pensatocode.simplicity.generator.writers;
+package org.pensatocode.simplicity.generator.writers.generator;
 
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
@@ -11,6 +11,7 @@ import org.pensatocode.simplicity.generator.services.DirectoryService;
 import org.pensatocode.simplicity.generator.services.JavaClassService;
 import org.pensatocode.simplicity.generator.util.GeneratorUtil;
 import org.pensatocode.simplicity.generator.util.StringUtil;
+import org.pensatocode.simplicity.generator.writers.JavaSourceWriter;
 
 import java.io.*;
 import java.util.List;

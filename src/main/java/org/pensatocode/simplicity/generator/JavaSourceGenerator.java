@@ -9,6 +9,7 @@ import org.pensatocode.simplicity.generator.exceptions.GeneratorConfigurationExc
 import org.pensatocode.simplicity.generator.services.DirectoryService;
 import org.pensatocode.simplicity.generator.services.JavaClassService;
 import org.pensatocode.simplicity.generator.writers.*;
+import org.pensatocode.simplicity.generator.writers.generator.*;
 
 import java.util.*;
 
@@ -55,7 +56,7 @@ public class JavaSourceGenerator {
             javaSourceWriters.add(new RepositoryWriter(velocityEngine, dirService, packages));
             javaSourceWriters.add(new MapperWriter(velocityEngine, dirService, javaService, packages));
             javaSourceWriters.add(new RepositoryImplWriter(velocityEngine, dirService, packages));
-            javaSourceWriters.add(new ControllerWriter(velocityEngine, dirService, packages));
+            javaSourceWriters.add(new RestControllerWriter(velocityEngine, dirService, packages));
             javaSourceWriters.add(new SchemaWriter(dirService, javaService));
         }
         return javaSourceWriters;
