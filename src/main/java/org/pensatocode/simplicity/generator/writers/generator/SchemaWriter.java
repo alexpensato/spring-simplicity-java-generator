@@ -4,7 +4,6 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import lombok.extern.log4j.Log4j2;
 import org.pensatocode.simplicity.generator.components.Config;
-import org.pensatocode.simplicity.generator.components.Packages;
 import org.pensatocode.simplicity.generator.components.properties.ConfigProperties;
 import org.pensatocode.simplicity.generator.model.MapperVariable;
 import org.pensatocode.simplicity.generator.services.DirectoryService;
@@ -90,7 +89,7 @@ public class SchemaWriter implements JavaSourceWriter {
                 .append(tableName)
                 .append(" (\n");
         sb.append("  ")
-                .append(id.getName())
+                .append(id.getSchemaName())
                 .append(" ")
                 .append(id.getType().getSqlType().toLowerCase())
                 .append(" DEFAULT nextval('")
@@ -103,7 +102,7 @@ public class SchemaWriter implements JavaSourceWriter {
                 continue;
             }
             sb.append("  ")
-                    .append(variable.getName())
+                    .append(variable.getSchemaName())
                     .append(" ")
                     .append(variable.getType().getSqlType().toLowerCase())
                     .append(" NOT NULL");

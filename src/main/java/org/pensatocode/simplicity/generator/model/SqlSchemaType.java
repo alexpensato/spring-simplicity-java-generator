@@ -20,7 +20,7 @@ public enum SqlSchemaType implements SchemaType {
     INTEGER("Integer","INTEGER", "getInt"),
     LONG("Long","BIGINT"),
     FLOAT("Float","REAL"),
-    DOUBLE("Double","DOUBLE"),
+    DOUBLE("Double","DOUBLE PRECISION", true, "DOUBLE"),
     BIG_DECIMAL("BigDecimal","DECIMAL"),
     CHAR("Char","CHAR","getString","convertToChar(",")"),
     CHARACTER("Character","CHAR","getString","convertToChar(",")"),
@@ -38,25 +38,42 @@ public enum SqlSchemaType implements SchemaType {
         private static final Map<String, SqlSchemaType> INSTANCE = new HashMap<>();
     }
 
-    SqlSchemaType(String javaType, String sqlType, String resultSetTypeGetter, String resultSetPrefix, String resultSetSuffix) {
+    SqlSchemaType(String javaType, String sqlType, String resultSetTypeGetter, String resultSetPrefix,
+                  String resultSetSuffix, boolean modifiedMapperType, String alternativeMapperType) {
         this.javaType = javaType;
         this.sqlType = sqlType;
         this.resultSetTypeGetter = resultSetTypeGetter;
         this.resultSetSuffix = resultSetSuffix;
         this.resultSetPrefix = resultSetPrefix;
+        this.modifiedMapperType = modifiedMapperType;
+        if (this.modifiedMapperType) {
+            this.mapperType = alternativeMapperType;
+        } else {
+            this.mapperType = sqlType;
+        }
         InnerMap.INSTANCE.put(javaType, this);
     }
 
+    SqlSchemaType(String javaType, String sqlType, String resultSetTypeGetter, String resultSetPrefix, String resultSetSuffix) {
+        this(javaType, sqlType, resultSetTypeGetter, resultSetPrefix, resultSetSuffix, false, null);
+    }
+
+    SqlSchemaType(String javaType, String sqlType, boolean modifiedMapperType, String alternativeMapperType) {
+        this(javaType, sqlType, "get"+javaType, "", "", modifiedMapperType, alternativeMapperType);
+    }
+
     SqlSchemaType(String javaType, String sqlType, String resultSetTypeGetter) {
-        this(javaType, sqlType, resultSetTypeGetter, "", "");
+        this(javaType, sqlType, resultSetTypeGetter, "", "", false, null);
     }
 
     SqlSchemaType(String javaType, String sqlType) {
-        this(javaType, sqlType, "get"+javaType, "", "");
+        this(javaType, sqlType, "get"+javaType, "", "", false, null);
     }
 
     private final String javaType;
     private final String sqlType;
+    private final boolean modifiedMapperType;
+    private final String mapperType;
     private final String resultSetTypeGetter;
     private final String resultSetPrefix;
     private final String resultSetSuffix;
@@ -73,6 +90,14 @@ public enum SqlSchemaType implements SchemaType {
     @Override
     public String getSqlType() {
         return sqlType;
+    }
+
+    public boolean isModifiedMapperType() {
+        return modifiedMapperType;
+    }
+
+    public String getMapperType() {
+        return mapperType;
     }
 
     @Override
