@@ -9,6 +9,7 @@ import org.pensatocode.simplicity.generator.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
@@ -55,7 +56,11 @@ public enum PathProperties implements Paths {
     PathProperties() {
         properties = new Properties();
         try {
-            properties.load(getClass().getClassLoader().getResourceAsStream("simplicity-generator.properties"));
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("custom-generator.properties");
+            if (inputStream == null) {
+                getClass().getClassLoader().getResourceAsStream("simplicity-generator.properties");
+            }
+            properties.load(inputStream);
         } catch (IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }

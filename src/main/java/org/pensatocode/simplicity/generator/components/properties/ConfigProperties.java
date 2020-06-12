@@ -42,6 +42,7 @@ public class ConfigProperties implements Config {
         String resourcePath = paths.getResourcesPath();
         properties = new Properties();
         try {
+            // Properties file in the target project
             String configPath = resourcePath + "simplicity.properties";
             if (log.isDebugEnabled()) {
                 log.info(String.format("Config path is %s", configPath));

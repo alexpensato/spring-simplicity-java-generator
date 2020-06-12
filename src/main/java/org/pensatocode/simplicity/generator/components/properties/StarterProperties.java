@@ -6,6 +6,7 @@ import org.pensatocode.simplicity.generator.exceptions.GeneratorConfigurationExc
 import org.pensatocode.simplicity.generator.util.StringUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +28,11 @@ public enum StarterProperties implements Starter {
     StarterProperties() {
         properties = new Properties();
         try {
-            properties.load(getClass().getClassLoader().getResourceAsStream("simplicity-generator.properties"));
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("custom-generator.properties");
+            if (inputStream == null) {
+                getClass().getClassLoader().getResourceAsStream("simplicity-generator.properties");
+            }
+            properties.load(inputStream);
         } catch (IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }

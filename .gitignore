@@ -23,6 +23,9 @@ target/
 *.tar.gz
 *.rar
 
+# Simplicity custom files
+/src/main/resources/custom-generator.properties
+
 # Necessary ZIP files
 !zips/simplicity-project-template.zip
 
