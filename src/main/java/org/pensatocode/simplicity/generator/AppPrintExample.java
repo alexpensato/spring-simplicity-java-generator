@@ -5,9 +5,10 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import lombok.extern.log4j.Log4j2;
 import org.pensatocode.simplicity.generator.components.Paths;
-import org.pensatocode.simplicity.generator.components.properties.PathProperties;
 import org.pensatocode.simplicity.generator.exceptions.GeneratorConfigurationException;
 import org.pensatocode.simplicity.generator.services.JavaClassService;
+import org.pensatocode.simplicity.generator.util.ComponentBinder;
+import org.pensatocode.simplicity.generator.util.ServiceBinder;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class AppPrintExample {
     public static void main(String[] args) {
         try {
             // Example using stdout
-            Paths paths = PathProperties.SINGLETON;
-            JavaClassService javaService = JavaClassService.SINGLETON;
+            Paths paths = ComponentBinder.getPaths();
+            JavaClassService javaService = ServiceBinder.getJavaClassService();
             // Example using stdout
             printJavaClasses(paths, javaService);
 

@@ -104,10 +104,12 @@ public enum PathProperties implements Paths {
                 + fixPath(this.getSimplicityProjectJavaSource());
         // root package
         rootPackagePath = baseJavaPath + fixPath(packages.getPackageGroup());
+        // destiny paths used for starting a project
+        destinyPaths = new TreeMap<>();
         // simplicity origin path
         modelPath = baseJavaPath + fixPath(packages.getModelsPackage());
+        destinyPaths.put(GeneratorUtil.MODELS_KEY, modelPath);
         // simplicity destiny paths
-        destinyPaths = new TreeMap<>();
         restControllersPath = baseJavaPath + fixPath(packages.getRestControllersPackage());
         destinyPaths.put(GeneratorUtil.REST_CONTROLLERS_KEY, restControllersPath);
         mvcControllersPath = baseJavaPath + fixPath(packages.getMvcControllersPackage());

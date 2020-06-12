@@ -62,6 +62,7 @@ public class GeneratorUtil {
         if (destinyKeys.isEmpty()) {
             destinyKeys.add(REPOSITORIES_KEY);
             destinyKeys.add(MAPPERS_KEY);
+            destinyKeys.add(MODELS_KEY);
             destinyKeys.add(REPOSITORY_IMPL_KEY);
             destinyKeys.add(REST_CONTROLLERS_KEY);
             destinyKeys.add(MVC_CONTROLLERS_KEY);

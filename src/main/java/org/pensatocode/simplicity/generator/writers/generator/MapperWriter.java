@@ -8,9 +8,9 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.pensatocode.simplicity.generator.components.Config;
 import org.pensatocode.simplicity.generator.components.Packages;
-import org.pensatocode.simplicity.generator.components.properties.ConfigProperties;
 import org.pensatocode.simplicity.generator.services.DirectoryService;
 import org.pensatocode.simplicity.generator.services.JavaClassService;
+import org.pensatocode.simplicity.generator.util.ComponentBinder;
 import org.pensatocode.simplicity.generator.util.GeneratorUtil;
 import org.pensatocode.simplicity.generator.util.StringUtil;
 import org.pensatocode.simplicity.generator.util.VelocityUtil;
@@ -27,12 +27,12 @@ public class MapperWriter implements JavaSourceWriter {
     private final Packages packages;
     private final Config config;
 
-    public MapperWriter(VelocityEngine velocityEngine, DirectoryService dirService, JavaClassService javaClassService, Packages packages) {
+    public MapperWriter(VelocityEngine velocityEngine, DirectoryService dirService, JavaClassService javaClassService) {
         this.velocityEngine = velocityEngine;
         this.dirService = dirService;
         this.javaService = javaClassService;
-        this.packages = packages;
-        this.config = ConfigProperties.get();
+        this.packages = ComponentBinder.getPackages();
+        this.config = ComponentBinder.getConfig();
     }
 
     public boolean generateSourceCode(ClassOrInterfaceDeclaration entity, VariableDeclarator id) {

@@ -2,12 +2,11 @@ package org.pensatocode.simplicity.generator;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.velocity.app.VelocityEngine;
-import org.pensatocode.simplicity.generator.components.Starter;
-import org.pensatocode.simplicity.generator.components.properties.PathProperties;
-import org.pensatocode.simplicity.generator.components.properties.StarterProperties;
 import org.pensatocode.simplicity.generator.exceptions.GeneratorConfigurationException;
 import org.pensatocode.simplicity.generator.services.DirectoryService;
+import org.pensatocode.simplicity.generator.util.ComponentBinder;
 import org.pensatocode.simplicity.generator.util.GeneratorUtil;
+import org.pensatocode.simplicity.generator.util.ServiceBinder;
 import org.pensatocode.simplicity.generator.util.VelocityUtil;
 
 import java.io.File;
@@ -26,19 +25,17 @@ public class AppProjectStarter {
     public static void main(String[] args) {
         try {
             // Check initial conditions
-            DirectoryService dirService = DirectoryService.SINGLETON;
+            DirectoryService dirService = ServiceBinder.getDirectoryService();
             dirService.checkProjectDir();
             // Extract starter project
-            copyAndExtractProjectFiles(PathProperties.SINGLETON.getProjectPath());
+            copyAndExtractProjectFiles(ComponentBinder.getPaths().getProjectPath());
             // Create dirs
             if (!dirService.createStarterDirectories()) {
                 throw new GeneratorConfigurationException("There was a problem creating directories.");
             }
             // Create all files
-            Starter starterProps = StarterProperties.SINGLETON;
             VelocityEngine velocityEngine = VelocityUtil.getVelocityEngine();
-
-            FileSourceStarter fileSourceStarter = new FileSourceStarter(starterProps, dirService, velocityEngine);
+            FileSourceStarter fileSourceStarter = new FileSourceStarter(dirService, velocityEngine);
             if (!fileSourceStarter.generateProject()) {
                 throw new GeneratorConfigurationException("There was a problem generating project.");
             }

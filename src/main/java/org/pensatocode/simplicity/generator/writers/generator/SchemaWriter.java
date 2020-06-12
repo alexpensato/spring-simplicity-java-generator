@@ -4,10 +4,10 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import lombok.extern.log4j.Log4j2;
 import org.pensatocode.simplicity.generator.components.Config;
-import org.pensatocode.simplicity.generator.components.properties.ConfigProperties;
 import org.pensatocode.simplicity.generator.model.MapperVariable;
 import org.pensatocode.simplicity.generator.services.DirectoryService;
 import org.pensatocode.simplicity.generator.services.JavaClassService;
+import org.pensatocode.simplicity.generator.util.ComponentBinder;
 import org.pensatocode.simplicity.generator.util.GeneratorUtil;
 import org.pensatocode.simplicity.generator.util.StringUtil;
 import org.pensatocode.simplicity.generator.writers.JavaSourceWriter;
@@ -25,7 +25,7 @@ public class SchemaWriter implements JavaSourceWriter {
     public SchemaWriter(DirectoryService dirService, JavaClassService javaService) {
         this.dirService = dirService;
         this.javaService = javaService;
-        this.config = ConfigProperties.get();
+        this.config = ComponentBinder.getConfig();
     }
 
     public boolean generateSourceCode(ClassOrInterfaceDeclaration entity, VariableDeclarator id) {

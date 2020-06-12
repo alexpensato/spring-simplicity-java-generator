@@ -110,7 +110,7 @@ public enum DirectoryService {
         return new File(directoryPath);
     }
 
-    private boolean createDirectories() throws GeneratorConfigurationException {
+    private boolean createDirectories() {
         for(String key: GeneratorUtil.getDestinyKeys()) {
             String path = paths.getDestinyPaths().get(key);
             File dir = new File(path);

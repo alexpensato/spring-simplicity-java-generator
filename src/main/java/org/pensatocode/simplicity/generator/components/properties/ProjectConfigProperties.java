@@ -1,7 +1,7 @@
 package org.pensatocode.simplicity.generator.components.properties;
 
 import lombok.extern.log4j.Log4j2;
-import org.pensatocode.simplicity.generator.components.Starter;
+import org.pensatocode.simplicity.generator.components.ProjectConfig;
 import org.pensatocode.simplicity.generator.exceptions.GeneratorConfigurationException;
 import org.pensatocode.simplicity.generator.util.StringUtil;
 
@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Log4j2
-public enum StarterProperties implements Starter {
+public enum ProjectConfigProperties implements ProjectConfig {
 
     SINGLETON;
 
@@ -25,7 +25,7 @@ public enum StarterProperties implements Starter {
     private String packageGroup;
 
     // Constructor
-    StarterProperties() {
+    ProjectConfigProperties() {
         properties = new Properties();
         try {
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("custom-generator.properties");
