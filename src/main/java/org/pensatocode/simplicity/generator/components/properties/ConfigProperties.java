@@ -31,7 +31,6 @@ public class ConfigProperties implements Config {
     private final Properties properties;
 
     // Assembled properties
-    private String databaseUsername = "postgres";
     private String apiContext = "api";
     private final Set<String> regenerateControllers = new HashSet<>();
     private final Set<String> regenerateRepositories = new HashSet<>();
@@ -59,9 +58,6 @@ public class ConfigProperties implements Config {
      */
 
     private void assembleConfigs() {
-        if(! StringUtil.isEmpty(getSimplicityConfigDatabaseUsername())) {
-            databaseUsername = getSimplicityConfigDatabaseUsername();
-        }
         if(! StringUtil.isEmpty(getSimplicityConfigApiContext())) {
             apiContext = getSimplicityConfigApiContext();
         }
@@ -79,11 +75,6 @@ public class ConfigProperties implements Config {
     /*
         Assembled config methods
      */
-
-    @Override
-    public String getDatabaseUsername() {
-        return databaseUsername;
-    }
 
     public String getApiContext() {
         return apiContext;
@@ -116,10 +107,6 @@ public class ConfigProperties implements Config {
     /*
         Properties direct methods
      */
-
-    private String getSimplicityConfigDatabaseUsername() {
-        return properties.getProperty("simplicity.config.database.username");
-    }
 
     private String getSimplicityConfigApiContext() {
         return properties.getProperty("simplicity.config.api.context");

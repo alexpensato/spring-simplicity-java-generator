@@ -39,7 +39,7 @@ public class $!mapperName extends TransactionalRowMapper<$!entityName> {
     public Map<String, Integer> mapTypes() {
         final Map<String, Integer> mapping = new LinkedHashMap<>();
 #foreach( $variable in $variables )
-        mapping.put("${variable.schemaName}", Types.${variable.type.mapperType});$!newLine
+        mapping.put("${variable.schemaName}", Types.${variable.type.javaMapperType});$!newLine
 #end
         return mapping;
     }

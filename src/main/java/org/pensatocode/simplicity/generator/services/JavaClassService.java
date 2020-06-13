@@ -10,8 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.pensatocode.simplicity.generator.exceptions.GeneratorConfigurationException;
 import org.pensatocode.simplicity.generator.model.MapperVariable;
 import org.pensatocode.simplicity.generator.model.SchemaType;
-import org.pensatocode.simplicity.generator.model.SqlSchemaType;
-import org.pensatocode.simplicity.generator.model.UserDefinedSchemaType;
+import org.pensatocode.simplicity.generator.util.PlatformUtil;
 import org.pensatocode.simplicity.generator.util.StringUtil;
 
 import javax.persistence.Entity;
@@ -105,13 +104,10 @@ public enum JavaClassService {
         return variables;
     }
 
-    public List<MapperVariable> listMapperVariables(ClassOrInterfaceDeclaration entity) {
+    public List<MapperVariable> listMapperVariables(ClassOrInterfaceDeclaration entity, Platform platform) {
         List<MapperVariable> mapperVariables = new ArrayList<>();
         for(VariableDeclarator variable: listVariables(entity)) {
-            SchemaType schemaType = SqlSchemaType.convertFromJavaParserType(variable.getType());
-            if (schemaType == null) {
-                schemaType = new UserDefinedSchemaType(variable.getTypeAsString());
-            }
+            SchemaType schemaType = PlatformUtil.convertFromJavaParserType(variable.getType(), platform);
             String name = variable.getNameAsString();
             String capitalizedName = StringUtil.capitalize(name);
             String schemaName = StringUtil.convertToSnakeCase(name);

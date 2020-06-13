@@ -26,6 +26,8 @@ public enum DatabaseConfigProperties implements DatabaseConfig {
     private String serverName;
     private String user;
     private String password;
+    private String schemaUser;
+    private String schemaPassword;
 
     // Constructor
     DatabaseConfigProperties() {
@@ -79,6 +81,14 @@ public enum DatabaseConfigProperties implements DatabaseConfig {
         serverName = this.getSimplicityDatasourceServerName();
         user = this.getSimplicityDatasourceUser();
         password = this.getSimplicityDatasourcePassword();
+        schemaUser = this.getSimplicityDatasourceSchemaUser();
+        schemaPassword = this.getSimplicityDatasourceSchemaPassword();
+        if (StringUtil.isEmpty(schemaUser)) {
+            schemaUser = user;
+        }
+        if(StringUtil.isEmpty(schemaPassword)) {
+            schemaPassword = password;
+        }
     }
 
     /*
@@ -86,7 +96,7 @@ public enum DatabaseConfigProperties implements DatabaseConfig {
      */
 
     @Override
-    public String getPlatform() {
+    public String getPlatformName() {
         return platform;
     }
 
@@ -115,6 +125,16 @@ public enum DatabaseConfigProperties implements DatabaseConfig {
         return password;
     }
 
+    @Override
+    public String getSchemaUser() {
+        return schemaUser;
+    }
+
+    @Override
+    public String getSchemaPassword() {
+        return schemaPassword;
+    }
+
     /*
         Properties direct methods
      */
@@ -141,6 +161,14 @@ public enum DatabaseConfigProperties implements DatabaseConfig {
 
     private String getSimplicityDatasourcePassword() {
         return properties.getProperty("simplicity.datasource.password");
+    }
+
+    private String getSimplicityDatasourceSchemaUser() {
+        return properties.getProperty("simplicity.datasource.schemaUser");
+    }
+
+    private String getSimplicityDatasourceSchemaPassword() {
+        return properties.getProperty("simplicity.datasource.schemaPassword");
     }
 
 }

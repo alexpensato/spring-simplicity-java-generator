@@ -63,7 +63,7 @@ public class AppProjectStarter {
             String jarFile = zipsDir + File.separator + GeneratorUtil.LIBS_DIR_NAME +
                     File.separator + GeneratorUtil.SIMPLICITY_JAR_FILE_NAME;
             String newJarFile = newProjectDir + File.separator + GeneratorUtil.LIBS_DIR_NAME +
-                    File.separator + GeneratorUtil.SIMPLICITY_JAR_FILE_NAME;;
+                    File.separator + GeneratorUtil.SIMPLICITY_JAR_FILE_NAME;
             Path libSrc = Paths.get(jarFile);
             Path libDest = Paths.get(newJarFile);
             Files.copy(libSrc, libDest, StandardCopyOption.REPLACE_EXISTING);

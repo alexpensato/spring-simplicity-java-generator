@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class UserDefinedSchemaType implements SchemaType {
     private String javaType;
+    private String javaMapperType = "OTHER";
     private String sqlType = "OTHER";
     private String resultSetTypeGetter;
     private String resultSetPrefix = "";
