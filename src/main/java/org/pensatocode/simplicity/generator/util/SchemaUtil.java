@@ -3,6 +3,7 @@ package org.pensatocode.simplicity.generator.util;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import lombok.extern.log4j.Log4j2;
 import org.pensatocode.simplicity.generator.components.DatabaseConfig;
+import org.pensatocode.simplicity.generator.model.DefaultSqlSampleData;
 import org.pensatocode.simplicity.generator.model.MapperVariable;
 import org.pensatocode.simplicity.generator.services.Platform;
 
@@ -10,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -21,15 +23,24 @@ public final class SchemaUtil {
 
     public static boolean checkForSchemaPresent(File schemaFile, String tableName) {
         final String ddl = "CREATE TABLE IF NOT EXISTS " + tableName.toUpperCase();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(schemaFile))) {
+        return checkForTextPresentInLine(schemaFile, ddl);
+    }
+
+    public static boolean checkForDataInsertPresent(File dataFile, String tableName) {
+        final String ddl = "INSERT INTO " + tableName.toUpperCase();
+        return checkForTextPresentInLine(dataFile, ddl);
+    }
+
+    private static boolean checkForTextPresentInLine(File file, String text) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.trim().toUpperCase().contains(ddl)) {
+                if (line.trim().toUpperCase().contains(text)) {
                     return true;
                 }
             }
         } catch (IOException e) {
-            log.warn("There was a problem reading the schema file: " + e.getMessage());
+            log.warn("There was a problem reading the file: " + e.getMessage());
         }
         return false;
     }
@@ -40,12 +51,7 @@ public final class SchemaUtil {
                                          VariableDeclarator parsedId,
                                          DatabaseConfig databaseConfig) {
         // extract id from list
-        MapperVariable id = null;
-        for(MapperVariable variable: variables) {
-            if (variable.getName().equals(parsedId.getNameAsString())) {
-                id = variable;
-            }
-        }
+        MapperVariable id = extractIdFromList(variables, parsedId);
         if (id == null) {
             // exit
             return "";
@@ -58,6 +64,16 @@ public final class SchemaUtil {
 
         // return schema DDL
         return sb.toString();
+    }
+
+    private static MapperVariable extractIdFromList(List<MapperVariable> variables, VariableDeclarator parsedId) {
+        MapperVariable id = null;
+        for(MapperVariable variable: variables) {
+            if (variable.getName().equals(parsedId.getNameAsString())) {
+                id = variable;
+            }
+        }
+        return id;
     }
 
     private static void createSequenceDdl(Platform platform,
@@ -117,5 +133,43 @@ public final class SchemaUtil {
                     .append(databaseConfig.getUser())
                     .append(";\n\n");
         }
+    }
+
+    public static String createInsertDdl(String tableName, List<MapperVariable> variables, VariableDeclarator parsedId) {
+        // extract id from list
+        MapperVariable id = extractIdFromList(variables, parsedId);
+        if (id == null) {
+            // exit
+            return "";
+        }
+        // list schema names and types
+        List<String> schemaNames = new ArrayList<>();
+        List<String> sqlTypes = new ArrayList<>();
+        for(MapperVariable variable: variables) {
+            if (variable.getName().equals(id.getName())) {
+                continue;
+            }
+            schemaNames.add(variable.getSchemaName());
+            sqlTypes.add(variable.getType().getJavaType());
+        }
+        // create Schema DDL
+        StringBuilder sb = new StringBuilder();
+        sb.append("INSERT INTO ")
+                .append(tableName)
+                .append(" (")
+                .append(String.join(",", schemaNames))
+                .append(") VALUES (")
+                .append(convertSqlTypesIntoSampleData(sqlTypes))
+                .append(");\n\n");
+        // return schema DDL
+        return sb.toString();
+    }
+
+    private static String convertSqlTypesIntoSampleData(List<String> sqlTypes) {
+        List<String> sampleData = new ArrayList<>();
+        for(String typeName: sqlTypes) {
+            sampleData.add(DefaultSqlSampleData.getSampleData(typeName));
+        }
+        return String.join(",", sampleData);
     }
 }
