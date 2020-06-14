@@ -31,6 +31,11 @@ public final class SchemaUtil {
         return checkForTextPresentInLine(dataFile, ddl);
     }
 
+    public static boolean checkForDatasetXmlPresent(File dataFile, String tableName) {
+        final String ddl = "<" + tableName.toUpperCase() + " ";
+        return checkForTextPresentInLine(dataFile, ddl);
+    }
+
     private static boolean checkForTextPresentInLine(File file, String text) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -161,6 +166,36 @@ public final class SchemaUtil {
                 .append(") VALUES (")
                 .append(convertSqlTypesIntoSampleData(sqlTypes))
                 .append(");\n\n");
+        // return schema DDL
+        return sb.toString();
+    }
+
+    public static String createDatasetXmlDdl(String tableName, List<MapperVariable> variables, VariableDeclarator parsedId) {
+        // extract id from list
+        MapperVariable id = extractIdFromList(variables, parsedId);
+        if (id == null) {
+            // exit
+            return "";
+        }
+        // create Schema DDL
+        StringBuilder sb = new StringBuilder();
+        sb.append("    <")
+                .append(tableName)
+                .append(" ");
+        for(MapperVariable variable: variables) {
+            if (variable.getName().equals(id.getName())) {
+                continue;
+            }
+            String sampleData = DefaultSqlSampleData.getSampleData(variable.getType().getJavaType());
+            if (sampleData!=null) {
+                sampleData = sampleData.replace("'", "");
+            }
+            sb.append(variable.getSchemaName())
+                    .append("='")
+                    .append(sampleData)
+                    .append("' ");
+        }
+        sb.append("/>\n");
         // return schema DDL
         return sb.toString();
     }

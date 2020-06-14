@@ -19,4 +19,32 @@ public final class FileUtil {
             log.warn("There was a problem appending to the file: " + e.getMessage());
         }
     }
+
+    public static void appendBeforeMatchingLine(String fileName, String patternMatch, String newLine) {
+        try {
+            // append the newLine in the StringBuilder input
+            BufferedReader file = new BufferedReader(new FileReader(fileName));
+            StringBuilder input = new StringBuilder();
+            String line = file.readLine();
+            while (line != null) {
+                if(line.contains(patternMatch)) {
+                    break;
+                }
+                input.append(line);
+                input.append('\n');
+                line = file.readLine();
+            }
+            input.append(newLine);
+            input.append(line);
+            file.close();
+            // write over the file
+            FileOutputStream fileOut = new FileOutputStream(fileName);
+            fileOut.write(input.toString().getBytes());
+            fileOut.close();
+
+        } catch (Exception e) {
+            log.warn("There was a problem reading/writing to the file: " + e.getMessage());
+        }
+    }
+
 }

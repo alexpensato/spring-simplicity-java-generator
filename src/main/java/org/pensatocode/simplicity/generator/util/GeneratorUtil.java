@@ -38,6 +38,7 @@ public class GeneratorUtil {
     // Fixed files
     public static final String SCHEMA_FILE = "schema.sql";
     public static final String DATA_FILE = "data.sql";
+    public static final String DATASET_XML_FILE = "dataset.xml";
 
     // Separator
     public static final String DOT = ".";
