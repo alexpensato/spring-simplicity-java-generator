@@ -41,7 +41,7 @@ public enum ProjectConfigProperties implements ProjectConfig {
         } catch (GeneratorConfigurationException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
-        this.assemblePackages();
+        this.assembleProperties();
     }
 
     /*
@@ -54,7 +54,7 @@ public enum ProjectConfigProperties implements ProjectConfig {
         }
     }
 
-    private void assemblePackages() {
+    private void assembleProperties() {
         // project name
         projectName = this.getSimplicityProjectName();
         // project path

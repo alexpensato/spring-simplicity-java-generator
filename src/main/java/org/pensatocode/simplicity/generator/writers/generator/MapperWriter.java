@@ -51,7 +51,7 @@ public class MapperWriter implements JavaSourceWriter {
             return true;
         }
         // platform
-        Platform platform = PlatformUtil.createPlatformUsing(databaseConfig.getPlatformName());
+        Platform platform = databaseConfig.getPlatform();
         // create the template
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("packageName", packages.getMappersPackage());

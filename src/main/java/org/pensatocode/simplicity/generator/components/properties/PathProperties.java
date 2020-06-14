@@ -79,6 +79,9 @@ public enum PathProperties implements Paths {
      */
 
     private void simplicityValidation() throws GeneratorConfigurationException {
+        if(StringUtil.isEmpty(getSimplicityProjectName())) {
+            throw new GeneratorConfigurationException("Project name not found");
+        }
         if(StringUtil.isEmpty(getSimplicityProjectPath())) {
             throw new GeneratorConfigurationException("Project path not found");
         }
@@ -98,7 +101,7 @@ public enum PathProperties implements Paths {
 
     private void assemblePaths() {
         // project path
-        projectPath = fixPath(this.getSimplicityProjectPath());
+        projectPath = fixPath(this.getSimplicityProjectPath()) + this.getSimplicityProjectName();
         // base java path
         final String baseJavaPath = fixPath(this.getSimplicityProjectPath())
                 + fixPath(this.getSimplicityProjectJavaSource());
@@ -221,6 +224,10 @@ public enum PathProperties implements Paths {
     /*
         Properties direct methods
      */
+
+    private String getSimplicityProjectName() {
+        return properties.getProperty("simplicity.starter.projectName");
+    }
 
     private String getSimplicityProjectPath() {
         return properties.getProperty("simplicity.starter.projectPath");

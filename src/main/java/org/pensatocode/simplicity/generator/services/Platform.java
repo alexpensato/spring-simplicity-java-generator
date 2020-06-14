@@ -9,4 +9,7 @@ public interface Platform {
     boolean isSequenceNecessary();
     boolean areGrantsNecessary();
     void appendPrimaryKey(String tableName, MapperVariable id, StringBuilder sb);
+    String getJdbcUrlPreffix();
+    String getDataSourceClassName();
+    String getDriverClassName();
 }

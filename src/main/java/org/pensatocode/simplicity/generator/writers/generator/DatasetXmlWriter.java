@@ -40,7 +40,7 @@ public class DatasetXmlWriter implements JavaSourceWriter {
             return true;
         }
         // platform
-        Platform platform = PlatformUtil.createPlatformUsing(databaseConfig.getPlatformName());
+        Platform platform = databaseConfig.getPlatform();
         // Schema DDL
         List<MapperVariable> variables = javaService.listMapperVariables(entity, platform);
         String datasetXmlDdl = SchemaUtil.createDatasetXmlDdl(tableName, variables, id);

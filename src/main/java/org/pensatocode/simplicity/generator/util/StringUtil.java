@@ -19,6 +19,10 @@ public final class StringUtil {
         return (str == null || "".equals(str));
     }
 
+    public static boolean isNotEmpty(Object str) {
+        return (str != null && !"".equals(str));
+    }
+
     public static String decapitalize(String str) {
         if (str == null || str.isEmpty()) {
             return str;

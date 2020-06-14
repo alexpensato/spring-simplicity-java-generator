@@ -45,4 +45,19 @@ public class TestPlatform implements Platform {
                 .append(id.getSchemaName())
                 .append(" IDENTITY NOT NULL PRIMARY KEY,\n");
     }
+
+    @Override
+    public String getJdbcUrlPreffix() {
+        return "";
+    }
+
+    @Override
+    public String getDataSourceClassName() {
+        return "";
+    }
+
+    @Override
+    public String getDriverClassName() {
+        return "";
+    }
 }

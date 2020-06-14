@@ -39,6 +39,8 @@ public class GeneratorUtil {
     public static final String SCHEMA_FILE = "schema.sql";
     public static final String DATA_FILE = "data.sql";
     public static final String DATASET_XML_FILE = "dataset.xml";
+    public static final String SPRING_PROPERTIES_FILE = "application.properties";
+    public static final String HIKARI_PROPERTIES_FILE = "hikari.properties";
 
     // Separator
     public static final String DOT = ".";

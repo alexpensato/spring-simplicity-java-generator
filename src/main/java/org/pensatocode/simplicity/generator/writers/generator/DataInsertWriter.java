@@ -40,7 +40,7 @@ public class DataInsertWriter implements JavaSourceWriter {
             return true;
         }
         // platform
-        Platform platform = PlatformUtil.createPlatformUsing(databaseConfig.getPlatformName());
+        Platform platform = databaseConfig.getPlatform();
         // Schema DDL
         List<MapperVariable> variables = javaService.listMapperVariables(entity, platform);
         String insertDdl = SchemaUtil.createInsertDdl(tableName, variables, id);

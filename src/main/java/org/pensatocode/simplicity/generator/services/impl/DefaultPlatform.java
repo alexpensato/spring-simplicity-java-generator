@@ -47,4 +47,19 @@ public class DefaultPlatform implements Platform {
                 .append(id.getType().getSqlType().toLowerCase())
                 .append(" AUTO_INCREMENT NOT NULL PRIMARY KEY,\n");
     }
+
+    @Override
+    public String getJdbcUrlPreffix() {
+        return "";
+    }
+
+    @Override
+    public String getDataSourceClassName() {
+        return "";
+    }
+
+    @Override
+    public String getDriverClassName() {
+        return "";
+    }
 }

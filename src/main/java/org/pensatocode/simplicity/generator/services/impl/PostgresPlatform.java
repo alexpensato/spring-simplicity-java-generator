@@ -56,4 +56,19 @@ public class PostgresPlatform implements Platform {
                 .append(tableName)
                 .append("_id_seq') PRIMARY KEY,\n");
     }
+
+    @Override
+    public String getJdbcUrlPreffix() {
+        return "jdbc:postgresql://";
+    }
+
+    @Override
+    public String getDataSourceClassName() {
+        return "org.postgresql.ds.PGSimpleDataSource";
+    }
+
+    @Override
+    public String getDriverClassName() {
+        return "org.postgresql.Driver";
+    }
 }

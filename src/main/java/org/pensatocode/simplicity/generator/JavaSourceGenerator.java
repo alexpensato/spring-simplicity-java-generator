@@ -57,6 +57,7 @@ public class JavaSourceGenerator {
             javaSourceWriters.add(new SchemaWriter(dirService, javaService));
             javaSourceWriters.add(new DataInsertWriter(dirService, javaService));
             javaSourceWriters.add(new DatasetXmlWriter(dirService, javaService));
+            javaSourceWriters.add(new DatabasePropertiesWriter(dirService));
             javaSourceWriters.add(new TestSchemaWriter(dirService, javaService));
         }
         return javaSourceWriters;

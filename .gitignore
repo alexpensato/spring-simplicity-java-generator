@@ -25,6 +25,7 @@ target/
 
 # Simplicity custom files
 /src/main/resources/custom-generator.properties
+/src/main/resources/entities/
 
 # Necessary ZIP files
 !zips/simplicity-project-template.zip
