@@ -21,29 +21,33 @@ public final class FileUtil {
     }
 
     public static void appendBeforeMatchingLine(String fileName, String patternMatch, String newLine) {
-        try {
-            // append the newLine in the StringBuilder input
-            BufferedReader file = new BufferedReader(new FileReader(fileName));
-            StringBuilder input = new StringBuilder();
-            String line = file.readLine();
+        // read file content and append newLine
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader buffer = new BufferedReader(new FileReader(fileName))) {
+            String line = buffer.readLine();
             while (line != null) {
                 if(line.contains(patternMatch)) {
                     break;
                 }
-                input.append(line);
-                input.append('\n');
-                line = file.readLine();
+                content.append(line);
+                content.append('\n');
+                line = buffer.readLine();
             }
-            input.append(newLine);
-            input.append(line);
-            file.close();
-            // write over the file
-            FileOutputStream fileOut = new FileOutputStream(fileName);
-            fileOut.write(input.toString().getBytes());
-            fileOut.close();
+            content.append(newLine);
+            content.append(line);
 
         } catch (Exception e) {
-            log.warn("There was a problem reading/writing to the file: " + e.getMessage());
+            log.warn("There was a problem reading the input file: " + e.getMessage());
+        }
+        // write over the file
+        writeOverFile(fileName, content);
+    }
+
+    private static void writeOverFile(String fileName, StringBuilder content) {
+        try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
+            fileOut.write(content.toString().getBytes());
+        } catch (Exception e) {
+            log.warn("There was a problem writing to the file: " + e.getMessage());
         }
     }
 
