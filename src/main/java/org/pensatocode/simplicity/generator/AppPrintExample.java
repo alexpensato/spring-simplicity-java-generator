@@ -32,7 +32,7 @@ public class AppPrintExample {
     public static void printJavaClasses(Paths paths, JavaClassService javaClassService) throws GeneratorConfigurationException {
         System.out.println("Simplicity is ready ...");
         System.out.println("Path = " + paths.getModelPath());
-        List<ClassOrInterfaceDeclaration> classes = javaClassService.getJavaClasses();
+        List<ClassOrInterfaceDeclaration> classes = javaClassService.getEntities();
 
         for (ClassOrInterfaceDeclaration javaClass: classes) {
             String qualifiedName = javaClass.getFullyQualifiedName().orElse("");

@@ -37,7 +37,7 @@ dependencies {
     implementation("org.apache.velocity:velocity:${velocityVersion}")
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    implementation("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 
     // Persistence API
@@ -57,7 +57,7 @@ tasks.register("simplicityGenerator", JavaExec::class) {
     }
     group = "simplicity"
     description = "Generate all classes for Simplicity entities"
-    main = "org.pensatocode.simplicity.generator.AppGenerator"
+    main = "org.pensatocode.simplicity.generator.AppProjectGenerator"
 }
 
 tasks.register("simplicityStarter", JavaExec::class) {
@@ -71,4 +71,13 @@ tasks.register("simplicityStarter", JavaExec::class) {
     main = "org.pensatocode.simplicity.generator.AppProjectStarter"
 }
 
-
+tasks.register("simplicityStartAndGenerate", JavaExec::class) {
+    dependsOn(JavaPlugin.COMPILE_JAVA_TASK_NAME)
+    doFirst {
+        classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", "$buildDir/libs")
+        classpath += sourceSets["main"].runtimeClasspath
+    }
+    group = "simplicity"
+    description = "Project starter and generator for Simplicity entities"
+    main = "org.pensatocode.simplicity.generator.AppProjectStartAndGenerate"
+}

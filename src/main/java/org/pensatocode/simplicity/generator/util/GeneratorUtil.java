@@ -34,6 +34,7 @@ public class GeneratorUtil {
     public static final String PROJECT_ZIP_FILE_NAME = "simplicity-project-template.zip";
     public static final String LIBS_DIR_NAME = "libs";
     public static final String SIMPLICITY_JAR_FILE_NAME = "spring-simplicity-java.jar";
+    public static final String ENTITIES_DIR_NAME = "src/main/resources/entities";
 
     // Fixed files
     public static final String SCHEMA_FILE = "schema.sql";

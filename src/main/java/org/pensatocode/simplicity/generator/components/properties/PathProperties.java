@@ -5,9 +5,9 @@ import org.pensatocode.simplicity.generator.exceptions.GeneratorConfigurationExc
 import org.pensatocode.simplicity.generator.components.Packages;
 import org.pensatocode.simplicity.generator.components.Paths;
 import org.pensatocode.simplicity.generator.util.GeneratorUtil;
+import org.pensatocode.simplicity.generator.util.PathUtil;
 import org.pensatocode.simplicity.generator.util.StringUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -27,13 +27,6 @@ public enum PathProperties implements Paths {
 
     // Package Util
     private final Packages packages;
-
-    // Separators
-    private static final char DOT = '.';
-    private static final char WINDOWS_SEPARATOR = '\\';
-    private static final char LINUX_SEPARATOR = '/';
-
-    private final char WRONG_SEPARATOR;
 
     // Assembled properties
     private String projectPath;
@@ -69,7 +62,6 @@ public enum PathProperties implements Paths {
         } catch (GeneratorConfigurationException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
-        WRONG_SEPARATOR = loadWrongSeparator();
         packages = PackageProperties.SINGLETON;
         this.assemblePaths();
     }
@@ -101,60 +93,37 @@ public enum PathProperties implements Paths {
 
     private void assemblePaths() {
         // project path
-        projectPath = fixPath(this.getSimplicityProjectPath()) + this.getSimplicityProjectName();
+        projectPath = PathUtil.fixPath(this.getSimplicityProjectPath()) +
+                PathUtil.fixPath(this.getSimplicityProjectName());
         // base java path
-        final String baseJavaPath = fixPath(this.getSimplicityProjectPath())
-                + fixPath(this.getSimplicityProjectJavaSource());
+        final String baseJavaPath = projectPath + PathUtil.fixPath(this.getSimplicityProjectJavaSource());
         // root package
-        rootPackagePath = baseJavaPath + fixPath(packages.getPackageGroup());
+        rootPackagePath = baseJavaPath + PathUtil.fixPath(packages.getPackageGroup());
         // destiny paths used for starting a project
         destinyPaths = new TreeMap<>();
         // simplicity origin path
-        modelPath = baseJavaPath + fixPath(packages.getModelsPackage());
+        modelPath = baseJavaPath + PathUtil.fixPath(packages.getModelsPackage());
         destinyPaths.put(GeneratorUtil.MODELS_KEY, modelPath);
         // simplicity destiny paths
-        restControllersPath = baseJavaPath + fixPath(packages.getRestControllersPackage());
+        restControllersPath = baseJavaPath + PathUtil.fixPath(packages.getRestControllersPackage());
         destinyPaths.put(GeneratorUtil.REST_CONTROLLERS_KEY, restControllersPath);
-        mvcControllersPath = baseJavaPath + fixPath(packages.getMvcControllersPackage());
+        mvcControllersPath = baseJavaPath + PathUtil.fixPath(packages.getMvcControllersPackage());
         destinyPaths.put(GeneratorUtil.MVC_CONTROLLERS_KEY, mvcControllersPath);
-        repositoriesPath = baseJavaPath + fixPath(packages.getRepositoriesPackage());
+        repositoriesPath = baseJavaPath + PathUtil.fixPath(packages.getRepositoriesPackage());
         destinyPaths.put(GeneratorUtil.REPOSITORIES_KEY, repositoriesPath);
-        repoImplementationsPath = baseJavaPath + fixPath(packages.getRepoImplementationsPackage());
+        repoImplementationsPath = baseJavaPath + PathUtil.fixPath(packages.getRepoImplementationsPackage());
         destinyPaths.put(GeneratorUtil.REPOSITORY_IMPL_KEY, repoImplementationsPath);
-        mappersPath = baseJavaPath + fixPath(packages.getMappersPackage());
+        mappersPath = baseJavaPath + PathUtil.fixPath(packages.getMappersPackage());
         destinyPaths.put(GeneratorUtil.MAPPERS_KEY, mappersPath);
         // resources
-        resourcesPath = fixPath(this.getSimplicityProjectPath())
-                + fixPath(this.getSimplicityProjectJavaResources());
+        resourcesPath = projectPath + PathUtil.fixPath(this.getSimplicityProjectJavaResources());
         // test-resources
-        testResourcesPath = fixPath(this.getSimplicityProjectPath())
-                + fixPath(this.getSimplicityProjectTestResources());
+        testResourcesPath = projectPath + PathUtil.fixPath(this.getSimplicityProjectTestResources());
         // test-classes-path
-        final String baseTestPath = fixPath(this.getSimplicityProjectPath())
-                + fixPath(this.getSimplicityProjectTestSource());
-        testJavaSourcePath = baseTestPath + fixPath(packages.getPackageGroup());
-        testRepositoriesPath = baseTestPath + fixPath(packages.getRepositoriesPackage());
+        final String baseTestPath = projectPath + PathUtil.fixPath(this.getSimplicityProjectTestSource());
+        testJavaSourcePath = baseTestPath + PathUtil.fixPath(packages.getPackageGroup());
+        testRepositoriesPath = baseTestPath + PathUtil.fixPath(packages.getRepositoriesPackage());
         destinyPaths.put(GeneratorUtil.TEST_REPOSITORIES_KEY, testRepositoriesPath);
-    }
-
-    private String fixPath(String str) {
-        if (str == null) {
-            return File.separator;
-        }
-        String tmpStr = str.replace(WRONG_SEPARATOR, File.separatorChar);
-        tmpStr = tmpStr.replace(DOT, File.separatorChar);
-        if (tmpStr.charAt(str.length()-1) == File.separatorChar) {
-            return tmpStr;
-        }
-        return tmpStr + File.separator;
-    }
-
-    private char loadWrongSeparator() {
-        if (File.separatorChar == WINDOWS_SEPARATOR) {
-            return LINUX_SEPARATOR;
-        } else {
-            return WINDOWS_SEPARATOR;
-        }
     }
 
     /*

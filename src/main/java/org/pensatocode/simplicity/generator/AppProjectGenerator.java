@@ -9,7 +9,7 @@ import org.pensatocode.simplicity.generator.util.ServiceBinder;
 import org.pensatocode.simplicity.generator.util.VelocityUtil;
 
 @Log4j2
-public class AppGenerator {
+public class AppProjectGenerator {
 
     public static void main(String[] args) {
         try {
